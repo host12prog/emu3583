@@ -1,9 +1,12 @@
+#ifndef Z3583_H
+#define Z3583_H
+
 #include <cstdint>
-#define SAMPLE_RATE 44100
 
 class Z3583 {
-	uint8_t vol_lut[16] = {0, 16, 32, 48, 64, 76, 84, 96, 108, 127, 144, 176, 204, 232, 248, 255};
-	enum Waveform {
+	// FIXME: make this enum better (i don't have the patience today)
+	// OPNA2608: "it's easier to tell that you're expecting the enum, and not a random number"
+	enum {
 		W_RECT = 0,
 		W_SAW,
 		W_NOISE,
@@ -24,3 +27,5 @@ class Z3583 {
 		void reset();
 		Z3583();
 };
+
+#endif

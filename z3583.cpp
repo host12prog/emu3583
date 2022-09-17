@@ -2,11 +2,14 @@
 // Z3583 fantasy sound chip emulation core: Aleksi Knutsi
 
 #include "z3583.hpp"
+#define SAMPLE_RATE 44100
+
+uint8_t vol_lut[16] = {0, 16, 32, 48, 64, 76, 84, 96, 108, 127, 144, 176, 204, 232, 248, 255};
 
 void Z3583::clockLFSR() {
 	for (int j = 0; j < 3; j++) {
 		channel[j].lfsr = (channel[j].lfsr >> 1 | (((channel[j].lfsr) ^ (channel[j].lfsr >> 2) ^ (channel[j].lfsr >> 3) ^ (channel[j].lfsr >> 5) ) & 1) << 31);
-		if (channel[j].lfsr&63==0)
+		if ((channel[j].lfsr & 63) == 0)
 			channel[j].lfsr = 0xEC48; // initial state of LFSR at power on
 	}
 }
@@ -25,7 +28,7 @@ void Z3583::getSample(short* l, short* r) {
 					break;
 				case W_SAW: 
 					// saw
-					channel[j].out = (channel[j].phase>>9)*2 - 8192;
+					channel[j].out = (channel[j].phase > >9) * 2 - 8192;
 					break;
 				case W_NOISE: 
 					// noise
@@ -35,7 +38,7 @@ void Z3583::getSample(short* l, short* r) {
 					break;
 				case W_RSAW: 
 					// reverse saw
-					channel[j].out = -(channel[j].phase>>9)*2 + 8192;
+					channel[j].out = -(channel[j].phase >> 9) * 2 + 8192;
 					break;
 			}
 		}
@@ -49,7 +52,8 @@ void Z3583::getSample(short* l, short* r) {
 		
 		mix += channel[j].out;
 	}
-	*l = *r = mix;
+	*l = mix;
+	*r = mix;
 }
 
 
