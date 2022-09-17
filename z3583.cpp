@@ -28,7 +28,7 @@ void Z3583::getSample(short* l, short* r) {
 					break;
 				case W_SAW: 
 					// saw
-					channel[j].out = (channel[j].phase > >9) * 2 - 8192;
+					channel[j].out = (channel[j].phase >> 9) * 2 - 8192;
 					break;
 				case W_NOISE: 
 					// noise
